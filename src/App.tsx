@@ -1,6 +1,7 @@
 import "./App.css";
-import { Button, Typography } from "@mui/material";
+import { Button, Container, Typography } from "@mui/material";
 import ResponsiveAppBar from "./components/ResponsiveAppBar";
+import { CreateRecipe } from "./components/NewRecipe";
 
 function App() {
   return (
@@ -10,6 +11,9 @@ function App() {
         Hello
       </Typography>
       <Button variant="outlined">Hello world</Button>
+      <Container fixed>
+        <CreateRecipe></CreateRecipe>
+      </Container>
     </>
   );
 }
