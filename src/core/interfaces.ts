@@ -29,3 +29,18 @@ export interface WithId {
 }
 
 export type RecipePrimitives = keyof Omit<Recipe, "steps" | "ingredients">;
+
+export interface RecipeListDto {
+  createdAt: Date;
+  updatedAt: Date;
+  id: number;
+  name: string;
+  picture: string;
+  cookingTime: number;
+  servings: number;
+  category: MealType;
+  difficulty: Difficulty;
+  calories: number;
+  rating: number;
+  authorId: number;
+}
