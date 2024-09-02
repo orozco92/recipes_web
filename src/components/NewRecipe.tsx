@@ -17,7 +17,11 @@ import {
 } from "@mui/material";
 import { MealType, RecipeDifficulty } from "../core/enums";
 import { Ingredients } from "./Ingredients";
-import { useState } from "react";
+import { ChangeEvent } from "react";
+import { Steps } from "./Steps";
+import { useUpsertRecipeStore } from "../store/recipe";
+import { RecipePrimitives } from "../core/interfaces";
+import { upsertRecipe } from "../services/recipe";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -28,16 +32,32 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export function CreateRecipe() {
-  const [category, setCategory] = useState<MealType | "">("");
-  const [difficulty, setDifficulty] = useState<RecipeDifficulty | "">("");
+  const recipe = useUpsertRecipeStore((data) => data.data);
+  const updateRecipeData = useUpsertRecipeStore(
+    (data) => data.updateRecipeData
+  );
 
-  const handleCategoryChange = (event: SelectChangeEvent) => {
-    setCategory(event.target.value as MealType);
+  const createRecipePrimitiveChangeFn =
+    (key: RecipePrimitives) =>
+    (
+      event:
+        | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+        | SelectChangeEvent
+    ) => {
+      let value: string | number = event.target.value;
+      if (key === "calories" || key === "cookingTime" || key === "servings")
+        value = +value;
+      updateRecipeData(value, key);
+    };
+
+  const saveRecipe = () => {
+    upsertRecipe(recipe)
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => console.log(error));
   };
 
-  const handleDifficultyChange = (event: SelectChangeEvent) => {
-    setDifficulty(event.target.value as RecipeDifficulty);
-  };
   return (
     <>
       <Card variant="outlined">
@@ -52,6 +72,8 @@ export function CreateRecipe() {
                   label="Title"
                   variant="outlined"
                   fullWidth={true}
+                  value={recipe.name}
+                  onChange={createRecipePrimitiveChangeFn("name")}
                 />
               </Item>
             </Grid>
@@ -64,8 +86,8 @@ export function CreateRecipe() {
                     id="category"
                     name="category"
                     label="Category"
-                    value={category}
-                    onChange={handleCategoryChange}
+                    value={recipe.category}
+                    onChange={createRecipePrimitiveChangeFn("category")}
                   >
                     <MenuItem value="">
                       <em>None</em>
@@ -87,6 +109,8 @@ export function CreateRecipe() {
                   label="Cooking time"
                   variant="outlined"
                   fullWidth={true}
+                  value={recipe.cookingTime}
+                  onChange={createRecipePrimitiveChangeFn("cookingTime")}
                 />
               </Item>
             </Grid>
@@ -98,6 +122,8 @@ export function CreateRecipe() {
                   label="Servings"
                   variant="outlined"
                   fullWidth={true}
+                  value={recipe.servings}
+                  onChange={createRecipePrimitiveChangeFn("servings")}
                 />
               </Item>
             </Grid>
@@ -109,6 +135,8 @@ export function CreateRecipe() {
                   label="Calories"
                   variant="outlined"
                   fullWidth={true}
+                  value={recipe.calories}
+                  onChange={createRecipePrimitiveChangeFn("calories")}
                 />
               </Item>
             </Grid>
@@ -121,9 +149,12 @@ export function CreateRecipe() {
                     id="difficulty"
                     name="difficulty"
                     label="Difficulty"
-                    value={difficulty}
-                    onChange={handleDifficultyChange}
+                    value={recipe.difficulty}
+                    onChange={createRecipePrimitiveChangeFn("difficulty")}
                   >
+                    <MenuItem value="BEGINER">
+                      <em>None</em>
+                    </MenuItem>
                     {Object.entries(RecipeDifficulty).map((value) => (
                       <MenuItem key={value[0]} value={value[0]}>
                         {value[1]}
@@ -136,9 +167,13 @@ export function CreateRecipe() {
           </Grid>
           <Divider />
           <Ingredients></Ingredients>
+          <Divider />
+          <Steps></Steps>
         </CardContent>
         <CardActions>
-          <Button variant="outlined">Save</Button>
+          <Button variant="outlined" onClick={saveRecipe}>
+            Save
+          </Button>
           <Button variant="text">Cancel</Button>
         </CardActions>
       </Card>

@@ -7,9 +7,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { FormEvent, useState } from "react";
+import { FormEvent } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import { useUpsertRecipeStore } from "../store/recipe";
+import { Ingredient } from "../core/interfaces";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -27,14 +29,15 @@ const TextItem = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-interface Ingredient {
-  name: string;
-  amount: number;
-  unit: string;
-}
-
 export function Ingredients() {
-  const [items, setItems] = useState<Ingredient[]>([]);
+  const ingredients =
+    useUpsertRecipeStore((data) => data.data.ingredients) ?? [];
+  const updateIngredients = useUpsertRecipeStore(
+    (data) => data.updateIngredients
+  );
+  const removeIngredient = useUpsertRecipeStore(
+    (data) => data.removeIngredient
+  );
 
   const handleAddIngredient = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -45,16 +48,15 @@ export function Ingredients() {
       formData.entries()
     ) as unknown as Ingredient;
 
+    if (!ingredient.name) return;
+
+    updateIngredients(ingredient);
+
     form.reset();
-    setItems([...items, ingredient]);
   };
 
   const createRemoveHandler = (index: number) => () => {
-    const newIngredients = [
-      ...items.slice(0, index),
-      ...items.slice(index + 1),
-    ];
-    setItems(newIngredients);
+    removeIngredient(index);
   };
 
   return (
@@ -97,7 +99,7 @@ export function Ingredients() {
         </Stack>
       </form>
       <List>
-        {items.map((item, index) => (
+        {ingredients.map((item, index) => (
           <Stack
             direction="row"
             justifyContent="space-between"
