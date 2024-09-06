@@ -1,4 +1,5 @@
 import { Recipe } from "../core/interfaces";
+import { RecipeListRequest } from "../core/interfaces/api";
 
 const API_URL = "http://localhost:3000";
 
@@ -13,11 +14,18 @@ export async function upsertRecipe(recipe: Recipe) {
   return data;
 }
 
-export async function listRecipes(page: number, pageSize: number) {
+export async function listRecipes(request: RecipeListRequest) {
   const query = new URLSearchParams({
-    page: page.toString(),
-    pageSize: pageSize.toString(),
+    page: request.page.toString(),
+    pageSize: request.pageSize.toString(),
   });
+
+  if (request.difficulty && request.difficulty !== "ALL")
+    query.set("difficulty", request.difficulty);
+
+  if (request.mealType && request.mealType !== "ALL")
+    query.set("mealType", request.mealType);
+
   const response = await fetch(`${API_URL}/recipes?${query.toString()}`, {
     method: "GET",
   });

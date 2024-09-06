@@ -17,7 +17,7 @@ const initialValue: Recipe = {
   cookingTime: 0,
   picture: "",
   servings: 0,
-  category: "",
+  mealType: "",
   difficulty: "",
   ingredients: [],
   steps: [],
