@@ -26,12 +26,11 @@ export async function listRecipes(request: RecipeListRequest) {
   if (request.mealType && request.mealType !== "ALL")
     query.set("mealType", request.mealType);
 
+  if (request.search) query.set("search", request.search);
+
   const response = await fetch(`${API_URL}/recipes?${query.toString()}`, {
     method: "GET",
   });
 
-  const data = await response.json();
-  // const list: unknown[] = data.data;
-  // data.data = [...list.concat(list), ...list.concat(list)];
-  return data;
+  return response.json();
 }

@@ -1,6 +1,6 @@
 import "./App.css";
 import { Container } from "@mui/material";
-import ResponsiveAppBar from "./components/ResponsiveAppBar";
+import ResponsiveAppBar from "./components/app-bar/ResponsiveAppBar";
 import RecipeList from "./components/recipe-list/RecipeList";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 

@@ -7,6 +7,7 @@ import "./RecipeList.css";
 import RecipeListHeader from "./RecipeListHeader";
 import { useRecipeListStore } from "../../store/recipe-list-filter";
 import { Skeleton, Typography } from "@mui/material";
+import { globalSearch } from "../../store/global-search";
 
 function RecipeList() {
   // Queries
@@ -14,10 +15,13 @@ function RecipeList() {
   const mealType = useRecipeListStore((s) => s.mealType);
   const difficulty = useRecipeListStore((s) => s.difficulty);
 
+  const search = globalSearch((state) => state.search);
+
   const { data, isLoading } = useQuery({
-    queryKey: ["listRecipes", page, mealType, difficulty],
+    queryKey: ["listRecipes", search, page, mealType, difficulty],
     queryFn: () =>
       listRecipes({
+        search,
         page,
         pageSize: 10,
         mealType: mealType,
