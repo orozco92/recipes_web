@@ -1,16 +1,13 @@
 import {
   Card,
-  CardHeader,
-  IconButton,
   CardMedia,
-  CardActions,
   Stack,
   CardContent,
   styled,
   Chip,
+  Tooltip,
+  Typography,
 } from "@mui/material";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
 import WhatshotIcon from "@mui/icons-material/Whatshot";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
@@ -45,11 +42,11 @@ function RecipeListItem({
 }: Props) {
   return (
     <Card sx={{ maxWidth: 345 }}>
-      <CardHeader
+      {/* <CardHeader
         style={{ textAlign: "left" }}
         title={title}
         subheader={author}
-      />
+      /> */}
       <CardMedia
         component="img"
         height="194"
@@ -57,25 +54,26 @@ function RecipeListItem({
         alt={title}
       />
       <CardContent>
-        {/* <Typography variant="h5" component="div" gutterBottom>
-          {title}
-        </Typography> */}
-        <Stack
-          direction="row"
-          spacing={2}
-          // marginTop={"1rem"}
-          marginBottom={"1rem"}
-        >
-          <Item>
-            {time} <AccessTimeFilledIcon />
-          </Item>
-          <Item>
-            {servings} <RestaurantIcon />
-          </Item>
-          <Item>
-            {calories} <WhatshotIcon />
-          </Item>
+        <Stack direction="row" spacing={2} marginBottom={"0.5rem"}>
+          <Tooltip title="Cooking time" placement="top">
+            <Item>
+              {time ?? "-"} <AccessTimeFilledIcon />
+            </Item>
+          </Tooltip>
+          <Tooltip title="Servings" placement="top">
+            <Item>
+              {servings ?? "-"} <RestaurantIcon />
+            </Item>
+          </Tooltip>
+          <Tooltip title="Calories" placement="top">
+            <Item>
+              {calories ?? "-"} <WhatshotIcon />
+            </Item>
+          </Tooltip>
         </Stack>
+        <Typography variant="h6" component="div" gutterBottom>
+          {title}
+        </Typography>
         {/* <Item>
           {author} <PersonIcon /> 
         </Item> */}
@@ -84,14 +82,14 @@ function RecipeListItem({
           {difficulty && <Chip label={difficulty} size="small" />}
         </Stack>
       </CardContent>
-      <CardActions disableSpacing>
+      {/* <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
           <FavoriteIcon />
         </IconButton>
         <IconButton aria-label="share">
           <ShareIcon />
         </IconButton>
-      </CardActions>
+      </CardActions> */}
     </Card>
   );
 }

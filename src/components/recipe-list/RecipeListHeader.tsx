@@ -16,7 +16,7 @@ import { MealType, RecipeDifficulty } from "../../core/interfaces";
 function RecipeListHeader({ totalPages = 1 }: { totalPages: number }) {
   const page = useRecipeListStore((s) => s.page);
   const setPage = useRecipeListStore((s) => s.setPage);
-  const handlePageChange = (event: ChangeEvent<unknown>, value: number) =>
+  const handlePageChange = (_event: ChangeEvent<unknown>, value: number) =>
     setPage(value);
 
   const mealType = useRecipeListStore((s) => s.mealType);
@@ -29,6 +29,14 @@ function RecipeListHeader({ totalPages = 1 }: { totalPages: number }) {
   const handleDifficultyChange = (event: SelectChangeEvent<string>) =>
     setDifficulty(event.target.value as RecipeDifficulty);
 
+  const pageSizeList = [10, 25, 50, 100];
+  const pageSize = useRecipeListStore((s) => s.pageSize);
+  const setPageSize = useRecipeListStore((s) => s.setPageSize);
+  const handlePageSizeChange = (event: SelectChangeEvent<string>) => {
+    const size = Number.parseInt(event.target.value);
+    setPageSize(Number.isNaN(size) ? 0 : size);
+  };
+
   return (
     <header
       style={{
@@ -38,7 +46,7 @@ function RecipeListHeader({ totalPages = 1 }: { totalPages: number }) {
         alignItems: "center",
       }}
     >
-      <Stack direction={"row"} gap={1}>
+      <Stack direction="row" gap={1}>
         <Box sx={{ minWidth: 120 }}>
           <FormControl fullWidth size="small">
             <InputLabel id="demo-simple-select-label">Meal type</InputLabel>
@@ -78,11 +86,31 @@ function RecipeListHeader({ totalPages = 1 }: { totalPages: number }) {
           </FormControl>
         </Box>
       </Stack>
-      <Pagination
-        count={totalPages ?? 1}
-        page={page}
-        onChange={handlePageChange}
-      />
+      <Stack direction="row" gap={1}>
+        <Box sx={{ minWidth: 80 }}>
+          <FormControl fullWidth size="small">
+            <InputLabel id="page-size">Show</InputLabel>
+            <Select
+              labelId="page-size"
+              id="page-size"
+              label="Show"
+              value={pageSize.toString()}
+              onChange={handlePageSizeChange}
+            >
+              {pageSizeList.map((item) => (
+                <MenuItem key={item} value={item}>
+                  {item}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+        <Pagination
+          count={totalPages ?? 1}
+          page={page}
+          onChange={handlePageChange}
+        />
+      </Stack>
     </header>
   );
 }

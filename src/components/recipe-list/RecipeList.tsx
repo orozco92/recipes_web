@@ -12,18 +12,19 @@ import { globalSearch } from "../../store/global-search";
 function RecipeList() {
   // Queries
   const page = useRecipeListStore((s) => s.page);
+  const pageSize = useRecipeListStore((s) => s.pageSize);
   const mealType = useRecipeListStore((s) => s.mealType);
   const difficulty = useRecipeListStore((s) => s.difficulty);
 
   const search = globalSearch((state) => state.search);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["listRecipes", search, page, mealType, difficulty],
+    queryKey: ["listRecipes", search, page, pageSize, mealType, difficulty],
     queryFn: () =>
       listRecipes({
         search,
         page,
-        pageSize: 10,
+        pageSize,
         mealType: mealType,
         difficulty,
       }),
