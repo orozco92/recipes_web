@@ -1,21 +1,23 @@
-import { MealType, RecipeDifficulty } from "./enums";
+import { MealTypeConst, RecipeDifficultyConst } from "./enums";
 
-type Difficulty = keyof typeof RecipeDifficulty;
-type Category = keyof typeof MealType;
+export type RecipeDifficulty =
+  (typeof RecipeDifficultyConst)[keyof typeof RecipeDifficultyConst];
+export type MealType = (typeof MealTypeConst)[keyof typeof MealTypeConst];
+
+export type WithAll = "ALL";
 
 export interface Ingredient {
   name: string;
   amount?: string;
   unit?: string;
 }
-
 export interface Recipe {
   name: string;
   picture: string;
   cookingTime: number;
   servings: number;
-  category: Category | "";
-  difficulty: Difficulty | "";
+  mealType: MealType | "";
+  difficulty: RecipeDifficulty | "";
   calories: number;
   steps: {
     number: number;
@@ -29,3 +31,18 @@ export interface WithId {
 }
 
 export type RecipePrimitives = keyof Omit<Recipe, "steps" | "ingredients">;
+
+export interface RecipeListDto {
+  createdAt: Date;
+  updatedAt: Date;
+  id: number;
+  name: string;
+  picture: string;
+  cookingTime: number;
+  servings: number;
+  mealType: MealType;
+  difficulty: RecipeDifficulty;
+  calories: number;
+  rating: number;
+  authorId: number;
+}

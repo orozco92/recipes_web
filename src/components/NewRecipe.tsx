@@ -15,7 +15,7 @@ import {
   styled,
   TextField,
 } from "@mui/material";
-import { MealType, RecipeDifficulty } from "../core/enums";
+import { MealTypeConst, RecipeDifficultyConst } from "../core/enums";
 import { Ingredients } from "./Ingredients";
 import { ChangeEvent } from "react";
 import { Steps } from "./Steps";
@@ -80,19 +80,19 @@ export function CreateRecipe() {
             <Grid item xs={6} md={4}>
               <Item>
                 <FormControl fullWidth>
-                  <InputLabel id="category">Category</InputLabel>
+                  <InputLabel id="mealType-label">Meal type</InputLabel>
                   <Select
-                    labelId="category-label"
-                    id="category"
-                    name="category"
-                    label="Category"
-                    value={recipe.category}
-                    onChange={createRecipePrimitiveChangeFn("category")}
+                    labelId="mealType-label"
+                    id="mealType"
+                    name="mealType"
+                    label="Meal type"
+                    value={recipe.mealType}
+                    onChange={createRecipePrimitiveChangeFn("mealType")}
                   >
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
-                    {Object.entries(MealType).map((value) => (
+                    {Object.entries(MealTypeConst).map((value) => (
                       <MenuItem key={value[0]} value={value[0]}>
                         {value[1]}
                       </MenuItem>
@@ -143,9 +143,9 @@ export function CreateRecipe() {
             <Grid item xs={6} md={3}>
               <Item>
                 <FormControl fullWidth>
-                  <InputLabel id="difficulty">Difficulty</InputLabel>
+                  <InputLabel id="difficulty-label">Difficulty</InputLabel>
                   <Select
-                    labelId="category-label"
+                    labelId="difficulty-label"
                     id="difficulty"
                     name="difficulty"
                     label="Difficulty"
@@ -155,7 +155,7 @@ export function CreateRecipe() {
                     <MenuItem value="BEGINER">
                       <em>None</em>
                     </MenuItem>
-                    {Object.entries(RecipeDifficulty).map((value) => (
+                    {Object.entries(RecipeDifficultyConst).map((value) => (
                       <MenuItem key={value[0]} value={value[0]}>
                         {value[1]}
                       </MenuItem>

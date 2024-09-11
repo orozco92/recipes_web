@@ -1,13 +1,20 @@
-export enum MealType {
-  BREAKFAST = "Breakfast",
-  LUNCH = "Lunch",
-  DINNER = "Dinner",
-  DESERTS = "Deserts",
-  SNACKS = "Snacks",
-}
-export enum RecipeDifficulty {
-  BEGINNER = "Beginner",
-  INTERMEDIATE = "Intermediate",
-  ADVANCED = "Advanced",
-  EXPERT = "Expert",
-}
+export const MealTypeConst = {
+  Breakfast: "BREAKFAST",
+  Lunch: "LUNCH",
+  Dinner: "DINNER",
+  Deserts: "DESERTS",
+  Snacks: "SNACKS",
+} as const;
+
+export const RecipeDifficultyConst = {
+  Beginner: "BEGINNER",
+  Intermediate: "INTERMEDIATE",
+  Advanced: "ADVANCED",
+  Expert: "EXPERT",
+} as const;
+
+export const MealTypeWithAll = { ...MealTypeConst, All: "ALL" } as const;
+export const RecipeDifficultyWithAll = {
+  ...RecipeDifficultyConst,
+  All: "ALL",
+} as const;
