@@ -11,19 +11,23 @@ import {
   Button,
   Tooltip,
   Avatar,
+  Divider,
 } from "@mui/material";
-import AdbIcon from "@mui/icons-material/Adb";
+import AdbIcon from "@mui/icons-material/DiningSharp";
 import MenuIcon from "@mui/icons-material/Menu";
 import reactLogo from "../../assets/react.svg";
 import AppBarSearch from "./AppBarSearch";
+import { Link, NavLink, useLocation, useParams } from "react-router-dom";
 
 const pages = ["Breakfast", "Lunch", "Dinner", "Deserts"];
-const settings = ["Profile", "Account", "Administration", "Logout"];
+const settings = ["Favorites", "Logout"];
 
 function ResponsiveAppBar() {
   const title = "Recipes App";
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const { type: mealTypeParam } = useParams();
+  const { pathname } = useLocation();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -48,8 +52,8 @@ function ResponsiveAppBar() {
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -97,14 +101,36 @@ function ResponsiveAppBar() {
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
+              <Divider />
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography
+                  textAlign="center"
+                  component={Link}
+                  to="/recipes/new"
+                  sx={{ textDecoration: "none", color: "inherit" }}
+                >
+                  New recipe
+                </Typography>
+              </MenuItem>
+              <Divider />
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography
+                  textAlign="center"
+                  component={Link}
+                  to="/users"
+                  sx={{ textDecoration: "none", color: "inherit" }}
+                >
+                  Users
+                </Typography>
+              </MenuItem>
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -122,12 +148,35 @@ function ResponsiveAppBar() {
             {pages.map((page) => (
               <Button
                 key={page}
+                component={NavLink}
+                to={`recipes/${page.toLowerCase()}`}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "white", display: "block" }}
+                variant={
+                  mealTypeParam === page.toLowerCase() ? "contained" : "text"
+                }
               >
                 {page}
               </Button>
             ))}
+          </Box>
+          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            <Button
+              component={NavLink}
+              to={`recipes/new`}
+              sx={{ my: 2, color: "white" }}
+              variant={pathname === "/recipes/new" ? "contained" : "text"}
+            >
+              New recipe
+            </Button>
+            <Button
+              component={NavLink}
+              to={`/users`}
+              sx={{ my: 2, color: "white" }}
+              variant={pathname.startsWith("/users") ? "contained" : "text"}
+            >
+              Users
+            </Button>
           </Box>
           <Box>
             <AppBarSearch />
@@ -156,7 +205,14 @@ function ResponsiveAppBar() {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                  <Typography
+                    textAlign="center"
+                    component={Link}
+                    to="/me/favorites"
+                    sx={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    {setting}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
