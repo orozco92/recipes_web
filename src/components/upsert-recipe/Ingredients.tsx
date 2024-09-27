@@ -10,8 +10,8 @@ import {
 import { FormEvent } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
-import { useUpsertRecipeStore } from "../store/recipe";
-import { Ingredient } from "../core/interfaces";
+import { useUpsertRecipeStore } from "../../store/recipe";
+import { Ingredient } from "../../core/interfaces";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",

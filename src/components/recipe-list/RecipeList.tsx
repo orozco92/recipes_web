@@ -1,13 +1,14 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { listRecipes } from "../../services/recipe";
 import RecipeListItem from "./RecipeListItem";
-import { RecipeListDto } from "../../core/interfaces";
+import { MealType, RecipeListDto } from "../../core/interfaces";
 
 import "./RecipeList.css";
 import RecipeListHeader from "./RecipeListHeader";
 import { useRecipeListStore } from "../../store/recipe-list-filter";
 import { Skeleton, Typography } from "@mui/material";
 import { globalSearch } from "../../store/global-search";
+import { useParams } from "react-router-dom";
 
 function RecipeList() {
   // Queries
@@ -17,15 +18,26 @@ function RecipeList() {
   const difficulty = useRecipeListStore((s) => s.difficulty);
 
   const search = globalSearch((state) => state.search);
+  const { type: mealTypeParam } = useParams();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["listRecipes", search, page, pageSize, mealType, difficulty],
+    queryKey: [
+      "listRecipes",
+      search,
+      page,
+      pageSize,
+      mealType,
+      difficulty,
+      mealTypeParam,
+    ],
     queryFn: () =>
       listRecipes({
         search,
         page,
         pageSize,
-        mealType: mealType,
+        mealType: (mealTypeParam
+          ? mealTypeParam.toUpperCase()
+          : mealType) as MealType,
         difficulty,
       }),
     placeholderData: keepPreviousData,

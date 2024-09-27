@@ -15,13 +15,14 @@ import {
   styled,
   TextField,
 } from "@mui/material";
-import { MealTypeConst, RecipeDifficultyConst } from "../core/enums";
+import { MealTypeConst, RecipeDifficultyConst } from "../../core/enums";
 import { Ingredients } from "./Ingredients";
 import { ChangeEvent } from "react";
+import { useUpsertRecipeStore } from "../../store/recipe";
+import { RecipePrimitives } from "../../core/interfaces";
+import { upsertRecipe } from "../../services/recipe";
+import { useNavigate } from "react-router-dom";
 import { Steps } from "./Steps";
-import { useUpsertRecipeStore } from "../store/recipe";
-import { RecipePrimitives } from "../core/interfaces";
-import { upsertRecipe } from "../services/recipe";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -31,7 +32,8 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export function CreateRecipe() {
+export function UpsertRecipe() {
+  const navigate = useNavigate();
   const recipe = useUpsertRecipeStore((data) => data.data);
   const updateRecipeData = useUpsertRecipeStore(
     (data) => data.updateRecipeData
@@ -174,7 +176,15 @@ export function CreateRecipe() {
           <Button variant="outlined" onClick={saveRecipe}>
             Save
           </Button>
-          <Button variant="text">Cancel</Button>
+          <Button
+            variant="text"
+            type="button"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            Cancel
+          </Button>
         </CardActions>
       </Card>
     </>
