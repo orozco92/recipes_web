@@ -8,7 +8,7 @@ import RecipeListHeader from "./RecipeListHeader";
 import { useRecipeListStore } from "../../store/recipe-list-filter";
 import { Skeleton, Typography } from "@mui/material";
 import { globalSearch } from "../../store/global-search";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function RecipeList() {
   // Queries
@@ -43,6 +43,8 @@ function RecipeList() {
     placeholderData: keepPreviousData,
   });
 
+  const navigate = useNavigate();
+
   return (
     <>
       <RecipeListHeader totalPages={data?.totalPages} />
@@ -59,6 +61,7 @@ function RecipeList() {
               time={item.cookingTime}
               mealType={item.mealType}
               difficulty={item.difficulty}
+              onClick={() => navigate(`/recipes/${item.id}/show`)}
             />
           ))}
         {isLoading && (

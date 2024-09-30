@@ -11,6 +11,11 @@ export interface Ingredient {
   amount?: string;
   unit?: string;
 }
+
+export interface RecipeStep {
+  number: number;
+  description: string;
+}
 export interface Recipe {
   name: string;
   picture: string;
@@ -19,10 +24,7 @@ export interface Recipe {
   mealType: MealType | "";
   difficulty: RecipeDifficulty | "";
   calories: number;
-  steps: {
-    number: number;
-    description: string;
-  }[];
+  steps: RecipeStep[];
   ingredients: (Ingredient | (Ingredient & WithId))[];
 }
 

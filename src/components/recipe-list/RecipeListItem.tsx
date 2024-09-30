@@ -21,6 +21,7 @@ interface Props {
   servings?: number;
   mealType?: string;
   difficulty?: string;
+  onClick?: () => void;
 }
 
 const Item = styled("span")(({ theme }) => ({
@@ -32,13 +33,13 @@ const Item = styled("span")(({ theme }) => ({
 
 function RecipeListItem({
   title,
-  author,
   img,
   calories,
   servings,
   time,
   mealType,
   difficulty,
+  onClick,
 }: Props) {
   return (
     <Card sx={{ maxWidth: 345 }}>
@@ -52,6 +53,8 @@ function RecipeListItem({
         height="194"
         image={img || "/default-recipe-picture.jpeg"}
         alt={title}
+        onClick={onClick}
+        sx={{ cursor: "pointer" }}
       />
       <CardContent>
         <Stack direction="row" spacing={2} marginBottom={"0.5rem"}>
