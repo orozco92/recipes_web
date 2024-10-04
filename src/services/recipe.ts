@@ -34,3 +34,10 @@ export async function listRecipes(request: RecipeListRequest) {
 
   return response.json();
 }
+
+export async function getRecipeData(recipeId?: string) {
+  if (!recipeId) return;
+  const response = await fetch(`http://localhost:3000/recipes/${recipeId}`);
+  const json = response.json();
+  return json;
+}

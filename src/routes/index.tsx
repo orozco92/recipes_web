@@ -69,6 +69,13 @@ const router = createBrowserRouter([
     },
   },
   {
+    path: "/signin/oauth-redirect",
+    async lazy() {
+      const OAuthRedirect = await import("../components/auth/OAuthRedirect.tsx");
+      return { Component: OAuthRedirect.default };
+    },
+  },
+  {
     path: "/signup",
     element: <h1>Sign up page</h1>,
   },

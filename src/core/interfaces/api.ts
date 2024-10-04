@@ -22,3 +22,7 @@ export interface RecipeListRequest extends SearcheablePagedAndSortedRequest {
   mealType: MealType | WithAll;
   difficulty: RecipeDifficulty | WithAll;
 }
+
+export interface AuthData {
+  accessToken: string;
+}

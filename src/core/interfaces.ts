@@ -1,4 +1,4 @@
-import { MealTypeConst, RecipeDifficultyConst } from "./enums";
+import { MealTypeConst, RecipeDifficultyConst, Roles } from "./enums";
 
 export type RecipeDifficulty =
   (typeof RecipeDifficultyConst)[keyof typeof RecipeDifficultyConst];
@@ -48,3 +48,22 @@ export interface RecipeListDto {
   rating: number;
   authorId: number;
 }
+
+export interface User {
+  username: string;
+  email: string;
+  role: Roles;
+}
+
+export interface ProfileUser {
+  id: number;
+  username: string;
+  email: string;
+  role: Roles;
+  firstName: string;
+  lastName: string;
+  picture: string;
+  favorites: Recipe[];
+}
+
+export type Nullable<T> = T | null;
