@@ -2,17 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { RecipeDetailLoading, RecipeDetails } from "./RecipeDetails";
 import { Button } from "@mui/material";
+import { getRecipeData } from "../../services/recipe";
 
 export function ShowRecipe() {
   const { recipeId } = useParams();
   const navigate = useNavigate();
   const { data, isLoading } = useQuery({
     queryKey: ["getRecipeData", recipeId],
-    queryFn: async () => {
-      const response = await fetch(`http://localhost:3000/recipes/${recipeId}`);
-      const json = response.json();
-      return json;
-    },
+    queryFn: () => getRecipeData(recipeId),
   });
 
   const goBack = () => navigate(-1);

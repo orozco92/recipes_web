@@ -9,39 +9,28 @@ import {
   Menu,
   MenuItem,
   Button,
-  Tooltip,
-  Avatar,
   Divider,
 } from "@mui/material";
 import AdbIcon from "@mui/icons-material/DiningSharp";
 import MenuIcon from "@mui/icons-material/Menu";
-import reactLogo from "../../assets/react.svg";
 import AppBarSearch from "./AppBarSearch";
 import { Link, NavLink, useLocation, useParams } from "react-router-dom";
+import { AppBarProfile } from "./AppBarProfile";
 
 const pages = ["Breakfast", "Lunch", "Dinner", "Deserts"];
-const settings = ["Favorites", "Logout"];
 
 function ResponsiveAppBar() {
   const title = "Recipes App";
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const { type: mealTypeParam } = useParams();
   const { pathname } = useLocation();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
   };
 
   return (
@@ -182,40 +171,7 @@ function ResponsiveAppBar() {
             <AppBarSearch />
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src={reactLogo} />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography
-                    textAlign="center"
-                    component={Link}
-                    to="/me/favorites"
-                    sx={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    {setting}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+            <AppBarProfile />
           </Box>
         </Toolbar>
       </Container>
