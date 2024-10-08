@@ -53,6 +53,7 @@ function RecipeList() {
           data?.data.map((item: RecipeListDto) => (
             <RecipeListItem
               key={item.id}
+              id={item.id}
               title={item.name}
               author={"David"}
               img={item.picture}

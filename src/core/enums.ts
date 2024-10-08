@@ -20,7 +20,7 @@ export const RecipeDifficultyWithAll = {
 } as const;
 
 export enum Roles {
-  Customer = 'CUSTOMER',
-  Colaborator = 'COLABORATOR',
-  Admin = 'ADMIN',
+  Customer = "CUSTOMER",
+  Colaborator = "COLABORATOR",
+  Admin = "ADMIN",
 }

@@ -1,14 +1,12 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/auth";
-import { getProfileData } from "../../services/profile";
 import { updateAccessToken } from "../../services/auth";
 
 const OAuthRedirect = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const setToken = useAuthStore((s) => s.setToken);
-  const setUser = useAuthStore((s) => s.setUser);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -17,11 +15,9 @@ const OAuthRedirect = () => {
     if (token) {
       setToken(token);
       updateAccessToken(token);
-      getProfileData()
-        .then((data) => setUser(data))
-        .finally(() => navigate("/"));
+      navigate("/");
     }
-  }, [location, navigate, setToken, setUser]);
+  }, [location, navigate, setToken]);
 
   return <div>Loading...</div>;
 };

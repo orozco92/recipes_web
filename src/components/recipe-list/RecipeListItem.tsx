@@ -7,12 +7,22 @@ import {
   Chip,
   Tooltip,
   Typography,
+  IconButton,
+  CardActions,
 } from "@mui/material";
 import WhatshotIcon from "@mui/icons-material/Whatshot";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
+import AddToFavoriteIcon from "@mui/icons-material/FavoriteBorder";
+import RemoveFromFavoriteIcon from "@mui/icons-material/Favorite";
+import ShareIcon from "@mui/icons-material/Share";
+import { useFavoritesStore } from "../../store/favorites";
+import { useAuthStore } from "../../store/auth";
+import { addToFavorites, removeFromFavorites } from "../../services/profile";
+import { useNotifications } from "@toolpad/core/useNotifications";
 
 interface Props {
+  id: number;
   title: string;
   author: string;
   img?: string;
@@ -32,6 +42,7 @@ const Item = styled("span")(({ theme }) => ({
 }));
 
 function RecipeListItem({
+  id,
   title,
   img,
   calories,
@@ -41,6 +52,38 @@ function RecipeListItem({
   difficulty,
   onClick,
 }: Props) {
+  const notifications = useNotifications();
+  const user = useAuthStore((s) => s.user);
+  const favorites = useFavoritesStore((s) => s.favorites);
+  const addToFavoritesStore = useFavoritesStore((s) => s.addToFavorites);
+  const removeFromFavoritesStore = useFavoritesStore(
+    (s) => s.removeFromFavorites
+  );
+
+  const isFavorite = favorites.includes(id);
+
+  const handleFavoriteButtonClick = () => {
+    if (isFavorite) {
+      notifications.show("Removed from favorites", {
+        severity: "success",
+        autoHideDuration: 3000,
+      });
+      removeFromFavoritesStore(id);
+      removeFromFavorites(id).then((data) => {
+        if (!data) addToFavoritesStore(id);
+      });
+    } else {
+      notifications.show("Added to favorites", {
+        severity: "success",
+        autoHideDuration: 3000,
+      });
+      addToFavoritesStore(id);
+      addToFavorites(id).then((data) => {
+        if (!data) removeFromFavoritesStore(id);
+      });
+    }
+  };
+
   return (
     <Card sx={{ maxWidth: 345 }}>
       {/* <CardHeader
@@ -80,19 +123,43 @@ function RecipeListItem({
         {/* <Item>
           {author} <PersonIcon /> 
         </Item> */}
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={1} marginBottom={"0.5rem"}>
           {mealType && <Chip label={mealType} size="small" />}
           {difficulty && <Chip label={difficulty} size="small" />}
         </Stack>
+        {/* <Stack direction="row" spacing={2}>
+          <Tooltip title="Add to favorites" placement="top">
+            <Item>
+              <FavoriteIcon />
+            </Item>
+          </Tooltip>
+          <Tooltip title="Share" placement="top">
+            <Item>
+              <ShareIcon />
+            </Item>
+          </Tooltip>
+        </Stack> */}
       </CardContent>
-      {/* <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
+      <CardActions disableSpacing>
+        {user && (
+          <Tooltip
+            title={isFavorite ? "Remove from favorites" : "Add to favorites"}
+            placement="top"
+          >
+            <IconButton
+              aria-label={
+                isFavorite ? "Remove from favorites" : "Add to favorites"
+              }
+              onClick={handleFavoriteButtonClick}
+            >
+              {isFavorite ? <RemoveFromFavoriteIcon /> : <AddToFavoriteIcon />}
+            </IconButton>
+          </Tooltip>
+        )}
         <IconButton aria-label="share">
           <ShareIcon />
         </IconButton>
-      </CardActions> */}
+      </CardActions>
     </Card>
   );
 }
