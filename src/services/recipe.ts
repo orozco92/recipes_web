@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Recipe } from "../core/interfaces";
 import { RecipeListRequest } from "../core/interfaces/api";
 
@@ -15,6 +16,26 @@ export async function upsertRecipe(recipe: Recipe) {
 }
 
 export async function listRecipes(request: RecipeListRequest) {
+  const query = buildRecipesListQuery(request);
+
+  const response = await axios.get(`${API_URL}/recipes?${query.toString()}`);
+
+  return response.data;
+}
+
+export async function favoriteRecipes(request: RecipeListRequest) {
+  const query = buildRecipesListQuery(request);
+
+  const response = await axios.get(
+    `${API_URL}/recipes/favorites?${query.toString()}`
+  );
+
+  return response.data;
+}
+
+export function buildRecipesListQuery(
+  request: RecipeListRequest
+): URLSearchParams {
   const query = new URLSearchParams({
     page: request.page.toString(),
     pageSize: request.pageSize.toString(),
@@ -28,11 +49,7 @@ export async function listRecipes(request: RecipeListRequest) {
 
   if (request.search) query.set("search", request.search);
 
-  const response = await fetch(`${API_URL}/recipes?${query.toString()}`, {
-    method: "GET",
-  });
-
-  return response.json();
+  return query;
 }
 
 export async function getRecipeData(recipeId?: string) {

@@ -9,10 +9,10 @@ const router = createBrowserRouter([
       {
         path: "",
         async lazy() {
-          const RecipeList = await import(
-            "../components/recipe-list/RecipeList.tsx"
+          const { RecipeListPage } = await import(
+            "../components/recipe-list-page/RecipeListPage.tsx"
           );
-          return { Component: RecipeList.default };
+          return { Component: RecipeListPage };
         },
       },
       {
@@ -27,10 +27,10 @@ const router = createBrowserRouter([
       {
         path: "/recipes/:type",
         async lazy() {
-          const RecipeList = await import(
-            "../components/recipe-list/RecipeList.tsx"
+          const { RecipeListPage } = await import(
+            "../components/recipe-list-page/RecipeListPage.tsx"
           );
-          return { Component: RecipeList.default };
+          return { Component: RecipeListPage };
         },
       },
       {
@@ -57,7 +57,12 @@ const router = createBrowserRouter([
       },
       {
         path: "/me/favorites",
-        element: <h1>Favorite recipes</h1>,
+        async lazy() {
+          const { FavoriteRecipes } = await import(
+            "../components/favorite-recipes/FavoriteRecipes.tsx"
+          );
+          return { Component: FavoriteRecipes };
+        },
       },
     ],
   },
@@ -71,7 +76,9 @@ const router = createBrowserRouter([
   {
     path: "/signin/oauth-redirect",
     async lazy() {
-      const OAuthRedirect = await import("../components/auth/OAuthRedirect.tsx");
+      const OAuthRedirect = await import(
+        "../components/auth/OAuthRedirect.tsx"
+      );
       return { Component: OAuthRedirect.default };
     },
   },

@@ -1,56 +1,26 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { listRecipes } from "../../services/recipe";
 import RecipeListItem from "./RecipeListItem";
-import { MealType, RecipeListDto } from "../../core/interfaces";
+import { RecipeListDto } from "../../core/interfaces";
 
 import "./RecipeList.css";
 import RecipeListHeader from "./RecipeListHeader";
-import { useRecipeListStore } from "../../store/recipe-list-filter";
 import { Skeleton, Typography } from "@mui/material";
-import { globalSearch } from "../../store/global-search";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function RecipeList() {
-  // Queries
-  const page = useRecipeListStore((s) => s.page);
-  const pageSize = useRecipeListStore((s) => s.pageSize);
-  const mealType = useRecipeListStore((s) => s.mealType);
-  const difficulty = useRecipeListStore((s) => s.difficulty);
+interface Props {
+  data: RecipeListDto[];
+  loading: boolean;
+  totalPages: number;
+  total: number;
+}
 
-  const search = globalSearch((state) => state.search);
-  const { type: mealTypeParam } = useParams();
-
-  const { data, isLoading } = useQuery({
-    queryKey: [
-      "listRecipes",
-      search,
-      page,
-      pageSize,
-      mealType,
-      difficulty,
-      mealTypeParam,
-    ],
-    queryFn: () =>
-      listRecipes({
-        search,
-        page,
-        pageSize,
-        mealType: (mealTypeParam
-          ? mealTypeParam.toUpperCase()
-          : mealType) as MealType,
-        difficulty,
-      }),
-    placeholderData: keepPreviousData,
-  });
-
+function RecipeList({ data, loading, total, totalPages }: Props) {
   const navigate = useNavigate();
-
   return (
     <>
-      <RecipeListHeader totalPages={data?.totalPages} />
+      <RecipeListHeader totalPages={totalPages} />
       <main className="recipe-container">
-        {!isLoading &&
-          data?.data.map((item: RecipeListDto) => (
+        {!loading &&
+          data.map((item: RecipeListDto) => (
             <RecipeListItem
               key={item.id}
               id={item.id}
@@ -65,7 +35,7 @@ function RecipeList() {
               onClick={() => navigate(`/recipes/${item.id}/show`)}
             />
           ))}
-        {isLoading && (
+        {loading && (
           <>
             <Skeleton variant="rounded" width={345} height={400} />
             <Skeleton variant="rounded" width={345} height={400} />
@@ -73,7 +43,7 @@ function RecipeList() {
           </>
         )}
       </main>
-      {!isLoading && (!data || data.total === 0) && (
+      {!loading && total === 0 && (
         <Typography variant="h4" textAlign="center">
           No recipes found
         </Typography>
