@@ -1,11 +1,13 @@
-import { AuthProvider, AppProvider, SignInPage } from "@toolpad/core";
+import {
+  AuthProvider,
+  AppProvider,
+  SignInPage,
+  useNotifications,
+} from "@toolpad/core";
 import { useTheme } from "@mui/material/styles";
 import { useAuthStore } from "../../store/auth";
 import { login } from "../../services/auth";
 import { useNavigate } from "react-router-dom";
-import { getProfileData } from "../../services/profile";
-import { Snackbar, Alert, SnackbarCloseReason } from "@mui/material";
-import { useState } from "react";
 
 const providers: AuthProvider[] = [
   { id: "credentials", name: "Email and Password" },
@@ -15,9 +17,9 @@ const providers: AuthProvider[] = [
 
 export default function SignIn() {
   const theme = useTheme();
+  const notifications = useNotifications();
 
   const setToken = useAuthStore((s) => s.setToken);
-  const setUser = useAuthStore((s) => s.setUser);
   const navigate = useNavigate();
 
   const signIn: (provider: AuthProvider, data: FormData) => void = async (
@@ -29,11 +31,12 @@ export default function SignIn() {
       const authData = await login(credentials.email, credentials.password);
       if (authData) {
         setToken(authData.accessToken);
-        const profile = await getProfileData();
-        if (profile) setUser(profile);
         navigate("/");
       } else {
-        setOpen(true);
+        notifications.show("Wrong username or password", {
+          severity: "error",
+          autoHideDuration: 3000,
+        });
       }
     }
     if (provider.id === "google") {
@@ -41,37 +44,9 @@ export default function SignIn() {
     }
   };
 
-  const [open, setOpen] = useState(false);
-
-  const handleClose = (
-    _event?: React.SyntheticEvent | Event,
-    reason?: SnackbarCloseReason
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
-
   return (
     <AppProvider theme={theme}>
       <SignInPage signIn={signIn} providers={providers} />
-      <Snackbar
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        anchorOrigin={{ horizontal: "right", vertical: "top" }}
-      >
-        <Alert
-          onClose={handleClose}
-          severity="error"
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          Wrong username or password
-        </Alert>
-      </Snackbar>
     </AppProvider>
   );
 }

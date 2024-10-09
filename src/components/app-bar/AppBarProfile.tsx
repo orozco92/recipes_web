@@ -17,7 +17,6 @@ export function AppBarProfile() {
   const settings = ["Favorites", "Logout"] as const;
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const user = useAuthStore((s) => s.user);
-  const setUser = useAuthStore((s) => s.setUser);
   const setToken = useAuthStore((s) => s.setToken);
   const navigate = useNavigate();
 
@@ -32,7 +31,6 @@ export function AppBarProfile() {
       navigate("/me/favorites");
     }
     if (value === "Logout") {
-      setUser(null);
       setToken(null);
       updateAccessToken();
     }

@@ -3,7 +3,6 @@ import { AuthData } from "../core/interfaces/api";
 import { StorageNames } from "../store/storage-names";
 
 const apiURL = import.meta.env.VITE_API_URL;
-
 (() => {
   const stringStorage = localStorage.getItem(StorageNames.Auth);
   if (!stringStorage) return;
