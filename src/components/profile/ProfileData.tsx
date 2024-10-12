@@ -12,6 +12,7 @@ import { updateProfileData } from "../../services/profile";
 import { UpdateProfileDto } from "../../core/interfaces";
 import { useAuthStore } from "../../store/auth";
 import { useNotifications } from "@toolpad/core";
+import { useValidationErrors } from "../../hooks/useValidationErrors";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -40,7 +41,7 @@ export function ProfileData({
   lastName,
   profilePicture,
 }: Props) {
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const { errors, setValidationError } = useValidationErrors();
   const [image, setImage] = useState<string>(profilePicture ?? "");
   const setUser = useAuthStore((s) => s.setUser);
   const notifications = useNotifications();
@@ -75,15 +76,7 @@ export function ProfileData({
           severity: "error",
           autoHideDuration: 3000,
         });
-        if (err && err.validationErrors) {
-          const e: Record<string, string> = {};
-          for (const [key, value] of Object.entries<Record<string, string>>(
-            err.validationErrors
-          )) {
-            e[key] = Object.values(value).join(", ");
-          }
-          setErrors(e);
-        }
+        setValidationError(err);
       });
   };
 

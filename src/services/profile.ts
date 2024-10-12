@@ -1,16 +1,17 @@
 import axios, { AxiosError } from "axios";
-import { ProfileUser, UpdateProfileDto } from "../core/interfaces";
+import {
+  ApiValidationError,
+  ProfileUser,
+  UpdatePasswordDto,
+  UpdateProfileDto,
+} from "../core/interfaces";
+import { ValidationError } from "../core/errors";
 
 const apiURL = import.meta.env.VITE_API_URL;
 
 export async function getProfileData(): Promise<ProfileUser | null> {
   try {
     const response = await axios.get(`${apiURL}/profile/me`);
-    // await new Promise((res) =>
-    //   setTimeout(() => {
-    //     res(1);
-    //   }, 3000)
-    // );
     return response.data;
   } catch (error) {
     const err = error as AxiosError;
@@ -29,7 +30,31 @@ export async function updateProfileData(
     );
     return response.data;
   } catch (error) {
-    return null;
+    const e = error as AxiosError;
+    if (e.response?.data)
+      throw new ValidationError(
+        (e.response?.data as { message: ApiValidationError[] }).message
+      );
+    throw new Error("Internal server error");
+  }
+}
+
+export async function updatePassword(
+  updatePasswordDto: UpdatePasswordDto
+): Promise<ProfileUser | null> {
+  try {
+    const response = await axios.patch(
+      `${apiURL}/profile/resetPassword`,
+      updatePasswordDto
+    );
+    return response.data;
+  } catch (error) {
+    const e = error as AxiosError;
+    if (e.response?.data)
+      throw new ValidationError(
+        (e.response?.data as { message: ApiValidationError[] }).message
+      );
+    throw new Error("Internal server error");
   }
 }
 

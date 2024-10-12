@@ -78,7 +78,13 @@ export interface ApiValidationError {
   property: string;
   errors: Record<string, string>;
 }
+
 export type UpdateProfileDto = Pick<
   ProfileUser,
   "username" | "firstName" | "lastName" | "picture"
 >;
+
+export interface UpdatePasswordDto {
+  oldPassword: string;
+  newPassword: string;
+}
