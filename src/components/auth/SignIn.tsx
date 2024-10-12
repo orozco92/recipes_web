@@ -7,7 +7,8 @@ import {
 import { useTheme } from "@mui/material/styles";
 import { useAuthStore } from "../../store/auth";
 import { login } from "../../services/auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 const providers: AuthProvider[] = [
   { id: "credentials", name: "Email and Password" },
@@ -46,7 +47,19 @@ export default function SignIn() {
 
   return (
     <AppProvider theme={theme}>
-      <SignInPage signIn={signIn} providers={providers} />
+      <SignInPage
+        signIn={signIn}
+        providers={providers}
+        slots={{ signUpLink: SignUpLink }}
+      />
     </AppProvider>
+  );
+}
+
+function SignUpLink() {
+  return (
+    <Button component={Link} variant="text" to={"/signup"}>
+      Sign up
+    </Button>
   );
 }

@@ -64,6 +64,13 @@ const router = createBrowserRouter([
           return { Component: FavoriteRecipes };
         },
       },
+      {
+        path: "/me",
+        async lazy() {
+          const { Profile } = await import("../components/profile/Profile.tsx");
+          return { Component: Profile };
+        },
+      },
     ],
   },
   {
@@ -84,7 +91,10 @@ const router = createBrowserRouter([
   },
   {
     path: "/signup",
-    element: <h1>Sign up page</h1>,
+    async lazy() {
+      const { SignUp } = await import("../components/auth/SignUp.tsx");
+      return { Component: SignUp };
+    },
   },
 ]);
 
