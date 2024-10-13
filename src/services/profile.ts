@@ -58,6 +58,19 @@ export async function updatePassword(
   }
 }
 
+export async function updateProfilePicture(
+  file: File
+): Promise<ProfileUser | null> {
+  try {
+    const body = new FormData();
+    body.append("file", file);
+    const response = await axios.patch(`${apiURL}/profile/updatePicture`, body);
+    return response.data;
+  } catch (error) {
+    throw new Error("Internal server error");
+  }
+}
+
 export async function getFavoriteIds() {
   try {
     const response = await axios.get(`${apiURL}/profile/favorites/ids`);

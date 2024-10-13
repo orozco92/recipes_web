@@ -1,30 +1,11 @@
-import {
-  Stack,
-  Typography,
-  Avatar,
-  Button,
-  TextField,
-  styled,
-  Skeleton,
-} from "@mui/material";
-import { useState, ChangeEvent, FormEvent } from "react";
+import { Stack, Typography, Button, TextField, Skeleton } from "@mui/material";
+import { FormEvent } from "react";
 import { updateProfileData } from "../../services/profile";
 import { UpdateProfileDto } from "../../core/interfaces";
 import { useAuthStore } from "../../store/auth";
 import { useNotifications } from "@toolpad/core";
 import { useValidationErrors } from "../../hooks/useValidationErrors";
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
+import { ChangeProfilePicture } from "./ChangeProfilePicture";
 
 interface Props {
   username?: string;
@@ -42,22 +23,8 @@ export function ProfileData({
   profilePicture,
 }: Props) {
   const { errors, setValidationError } = useValidationErrors();
-  const [image, setImage] = useState<string>(profilePicture ?? "");
   const setUser = useAuthStore((s) => s.setUser);
   const notifications = useNotifications();
-
-  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.item(0);
-    if (!file) return;
-
-    const reader = new FileReader();
-
-    reader.readAsDataURL(file);
-
-    reader.onload = () => {
-      setImage(reader.result?.toString() ?? "");
-    };
-  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -83,30 +50,7 @@ export function ProfileData({
   return (
     <Stack spacing={1} component={"form"} onSubmit={handleSubmit}>
       <Typography variant="h4">Profile data</Typography>
-      <Stack justifyContent={"center"} alignItems={"center"}>
-        <Avatar
-          alt="Profile image"
-          src={image}
-          variant="square"
-          sx={{ width: "15rem", height: "15rem" }}
-        />
-
-        <Button
-          component="label"
-          role={undefined}
-          variant="contained"
-          tabIndex={-1}
-          disableElevation
-          sx={{ width: "15rem" }}
-        >
-          Change picture
-          <VisuallyHiddenInput
-            type="file"
-            onChange={handleImageChange}
-            multiple
-          />
-        </Button>
-      </Stack>
+      <ChangeProfilePicture profilePicture={profilePicture} />
       <TextField
         id="email"
         name="email"
