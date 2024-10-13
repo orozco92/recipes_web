@@ -14,7 +14,7 @@ import { useAuthStore } from "../../store/auth";
 import { updateAccessToken } from "../../services/auth";
 
 export function AppBarProfile() {
-  const settings = ["Favorites", "Logout"] as const;
+  const settings = ["Favorites", "Profile", "Logout"] as const;
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const user = useAuthStore((s) => s.user);
   const setToken = useAuthStore((s) => s.setToken);
@@ -27,14 +27,18 @@ export function AppBarProfile() {
   };
 
   const handleCloseUserMenu = (value: (typeof settings)[number]) => {
-    if (value === "Favorites") {
-      navigate("/me/favorites");
+    switch (value) {
+      case "Favorites":
+        navigate("/me/favorites");
+        break;
+      case "Profile":
+        navigate("/me");
+        break;
+      case "Logout":
+        setToken(null);
+        updateAccessToken();
+        break;
     }
-    if (value === "Logout") {
-      setToken(null);
-      updateAccessToken();
-    }
-
     setAnchorElUser(null);
   };
 

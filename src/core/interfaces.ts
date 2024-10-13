@@ -67,3 +67,24 @@ export interface ProfileUser {
 }
 
 export type Nullable<T> = T | null;
+
+export interface SignUpDto {
+  username: string;
+  email: string;
+  password: string;
+}
+
+export interface ApiValidationError {
+  property: string;
+  errors: Record<string, string>;
+}
+
+export type UpdateProfileDto = Pick<
+  ProfileUser,
+  "username" | "firstName" | "lastName" | "picture"
+>;
+
+export interface UpdatePasswordDto {
+  oldPassword: string;
+  newPassword: string;
+}
