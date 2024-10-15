@@ -50,9 +50,13 @@ export interface RecipeListDto {
 }
 
 export interface User {
+  id: number;
   username: string;
   email: string;
   role: Roles;
+  firstName?: string;
+  lastName?: string;
+  enabled: boolean;
 }
 
 export interface ProfileUser {
@@ -66,7 +70,7 @@ export interface ProfileUser {
   favorites: Recipe[];
 }
 
-export type Nullable<T> = T | null;
+export type Nullable<T> = T | null | undefined;
 
 export interface SignUpDto {
   username: string;
@@ -88,3 +92,12 @@ export interface UpdatePasswordDto {
   oldPassword: string;
   newPassword: string;
 }
+
+export type Colors =
+  | "default"
+  | "primary"
+  | "secondary"
+  | "error"
+  | "info"
+  | "success"
+  | "warning";

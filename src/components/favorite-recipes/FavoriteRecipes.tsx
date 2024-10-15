@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { MealType } from "../../core/interfaces";
 import { favoriteRecipes } from "../../services/recipe";
 import { globalSearch } from "../../store/global-search";
-import { useRecipeListStore } from "../../store/recipe-list-filter";
+import { useRecipeListStore } from "../../store/recipe-list";
 import RecipeList from "../recipe-list/RecipeList";
 
 export function FavoriteRecipes() {

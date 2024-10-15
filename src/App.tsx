@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { getFavoriteIds, getProfileData } from "./services/profile";
 import { useFavoritesStore } from "./store/favorites";
 import { updateAccessToken } from "./services/auth";
+import { DialogsProvider } from "@toolpad/core/useDialogs";
 
 const queryClient = new QueryClient();
 
@@ -40,7 +41,9 @@ function App() {
       <ResponsiveAppBar />
       <Container fixed style={{ paddingTop: 20 }}>
         <QueryClientProvider client={queryClient}>
-          <Outlet />
+          <DialogsProvider>
+            <Outlet />
+          </DialogsProvider>
         </QueryClientProvider>
       </Container>
     </>

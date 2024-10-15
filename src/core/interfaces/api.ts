@@ -1,3 +1,4 @@
+import { Roles } from "../enums";
 import { MealType, RecipeDifficulty, WithAll } from "../interfaces";
 
 export interface PagedRequest {
@@ -21,6 +22,10 @@ export type SearcheablePagedAndSortedRequest = Partial<SerchRequest> &
 export interface RecipeListRequest extends SearcheablePagedAndSortedRequest {
   mealType: MealType | WithAll;
   difficulty: RecipeDifficulty | WithAll;
+}
+
+export interface UserListRequest extends SearcheablePagedAndSortedRequest {
+  roles?: Roles[] | Roles;
 }
 
 export interface AuthData {

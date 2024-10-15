@@ -2,10 +2,10 @@ import axios from "axios";
 import { Recipe } from "../core/interfaces";
 import { RecipeListRequest } from "../core/interfaces/api";
 
-const API_URL = "http://localhost:3000";
+const apiURL = import.meta.env.VITE_API_URL;
 
 export async function upsertRecipe(recipe: Recipe) {
-  const response = await fetch(`${API_URL}/recipes`, {
+  const response = await fetch(`${apiURL}/recipes`, {
     method: "POST",
     headers: [["Content-Type", "application/json"]],
     body: JSON.stringify(recipe),
@@ -18,7 +18,7 @@ export async function upsertRecipe(recipe: Recipe) {
 export async function listRecipes(request: RecipeListRequest) {
   const query = buildRecipesListQuery(request);
 
-  const response = await axios.get(`${API_URL}/recipes?${query.toString()}`);
+  const response = await axios.get(`${apiURL}/recipes?${query.toString()}`);
 
   return response.data;
 }
@@ -27,7 +27,7 @@ export async function favoriteRecipes(request: RecipeListRequest) {
   const query = buildRecipesListQuery(request);
 
   const response = await axios.get(
-    `${API_URL}/recipes/favorites?${query.toString()}`
+    `${apiURL}/recipes/favorites?${query.toString()}`
   );
 
   return response.data;

@@ -20,7 +20,7 @@ function RecipeList({ data, loading, total, totalPages }: Props) {
       <RecipeListHeader totalPages={totalPages} />
       <main className="recipe-container">
         {!loading &&
-          data.map((item: RecipeListDto) => (
+          data?.map((item: RecipeListDto) => (
             <RecipeListItem
               key={item.id}
               id={item.id}

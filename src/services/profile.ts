@@ -44,7 +44,7 @@ export async function updatePassword(
 ): Promise<ProfileUser | null> {
   try {
     const response = await axios.patch(
-      `${apiURL}/profile/resetPassword`,
+      `${apiURL}/profile/updatePassword`,
       updatePasswordDto
     );
     return response.data;
