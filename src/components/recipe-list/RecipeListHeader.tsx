@@ -9,7 +9,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { ChangeEvent } from "react";
-import { useRecipeListStore } from "../../store/recipe-list-filter";
+import { useRecipeListStore } from "../../store/recipe-list";
 import { MealTypeWithAll, RecipeDifficultyWithAll } from "../../core/enums";
 import { MealType, RecipeDifficulty } from "../../core/interfaces";
 

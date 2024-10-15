@@ -16,6 +16,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AppBarSearch from "./AppBarSearch";
 import { Link, NavLink, useLocation, useParams } from "react-router-dom";
 import { AppBarProfile } from "./AppBarProfile";
+import { useAuthStore } from "../../store/auth";
+import { Roles } from "../../core/enums";
 
 const pages = ["Breakfast", "Lunch", "Dinner", "Deserts"];
 
@@ -24,6 +26,11 @@ function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const { type: mealTypeParam } = useParams();
   const { pathname } = useLocation();
+  const user = useAuthStore((s) => s.user);
+
+  const canCreateRecipe =
+    user && [Roles.Admin, Roles.Colaborator].includes(user.role);
+  const canManageUsers = user && Roles.Admin === user.role;
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -90,28 +97,38 @@ function ResponsiveAppBar() {
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
-              <Divider />
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Typography
-                  textAlign="center"
-                  component={Link}
-                  to="/recipes/new"
-                  sx={{ textDecoration: "none", color: "inherit" }}
+              {canCreateRecipe && [
+                <Divider key={"canCreateRecipeDivider"} />,
+                <MenuItem
+                  onClick={handleCloseNavMenu}
+                  key={"canCreateRecipeItem"}
                 >
-                  New recipe
-                </Typography>
-              </MenuItem>
-              <Divider />
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Typography
-                  textAlign="center"
-                  component={Link}
-                  to="/users"
-                  sx={{ textDecoration: "none", color: "inherit" }}
+                  <Typography
+                    textAlign="center"
+                    component={Link}
+                    to="/recipes/new"
+                    sx={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    New recipe
+                  </Typography>
+                </MenuItem>,
+              ]}
+              {canManageUsers && [
+                <Divider key={"canManageUsersDivider"} />,
+                <MenuItem
+                  onClick={handleCloseNavMenu}
+                  key={"canManageUsersItem"}
                 >
-                  Users
-                </Typography>
-              </MenuItem>
+                  <Typography
+                    textAlign="center"
+                    component={Link}
+                    to="/users"
+                    sx={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    Users
+                  </Typography>
+                </MenuItem>,
+              ]}
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -150,22 +167,26 @@ function ResponsiveAppBar() {
             ))}
           </Box>
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <Button
-              component={NavLink}
-              to={`recipes/new`}
-              sx={{ my: 2, color: "white" }}
-              variant={pathname === "/recipes/new" ? "contained" : "text"}
-            >
-              New recipe
-            </Button>
-            <Button
-              component={NavLink}
-              to={`/users`}
-              sx={{ my: 2, color: "white" }}
-              variant={pathname.startsWith("/users") ? "contained" : "text"}
-            >
-              Users
-            </Button>
+            {canCreateRecipe && (
+              <Button
+                component={NavLink}
+                to={`recipes/new`}
+                sx={{ my: 2, color: "white" }}
+                variant={pathname === "/recipes/new" ? "contained" : "text"}
+              >
+                New recipe
+              </Button>
+            )}
+            {canManageUsers && (
+              <Button
+                component={NavLink}
+                to={`/users`}
+                sx={{ my: 2, color: "white" }}
+                variant={pathname.startsWith("/users") ? "contained" : "text"}
+              >
+                Users
+              </Button>
+            )}
           </Box>
           <Box>
             <AppBarSearch />
