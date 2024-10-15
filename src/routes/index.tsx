@@ -53,7 +53,12 @@ const router = createBrowserRouter([
       },
       {
         path: "/users",
-        element: <h1>User list</h1>,
+        async lazy() {
+          const { UserListPage } = await import(
+            "../components/user-list-page/UserListPage.tsx"
+          );
+          return { Component: UserListPage };
+        },
       },
       {
         path: "/me/favorites",
