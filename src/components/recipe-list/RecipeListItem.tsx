@@ -20,6 +20,7 @@ import { useFavoritesStore } from "../../store/favorites";
 import { useAuthStore } from "../../store/auth";
 import { addToFavorites, removeFromFavorites } from "../../services/profile";
 import { useNotifications } from "@toolpad/core/useNotifications";
+import { useDialogs } from "@toolpad/core";
 
 interface Props {
   id: number;
@@ -53,6 +54,7 @@ function RecipeListItem({
   onClick,
 }: Props) {
   const notifications = useNotifications();
+  const dialogs = useDialogs();
   const user = useAuthStore((s) => s.user);
   const favorites = useFavoritesStore((s) => s.favorites);
   const addToFavoritesStore = useFavoritesStore((s) => s.addToFavorites);
@@ -82,6 +84,12 @@ function RecipeListItem({
         if (!data) removeFromFavoritesStore(id);
       });
     }
+  };
+
+  const handleShareButtonClick = () => {
+    import("../utils/SocialShareDialog").then(({ SocialShareDialog }) =>
+      dialogs.open(SocialShareDialog, id)
+    );
   };
 
   return (
@@ -156,7 +164,7 @@ function RecipeListItem({
             </IconButton>
           </Tooltip>
         )}
-        <IconButton aria-label="share">
+        <IconButton aria-label="share" onClick={handleShareButtonClick}>
           <ShareIcon />
         </IconButton>
       </CardActions>
