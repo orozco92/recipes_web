@@ -1,21 +1,29 @@
 import { create } from "zustand";
-import { Ingredient, Recipe, RecipePrimitives } from "../core/interfaces";
+import {
+  Ingredient,
+  Recipe,
+  RecipePrimitives,
+  UpsertRecipeState,
+} from "../core/interfaces";
 import { devtools } from "zustand/middleware";
 
 interface State {
-  data: Recipe;
+  data: UpsertRecipeState;
+  picture: string;
+  pictureFile: File | undefined;
   updateSteps: (description: string) => void;
   updateIngredients: (ingredient: Ingredient) => void;
   removeIngredient: (index: number) => void;
   updateRecipeData: (data: unknown, key: RecipePrimitives) => void;
+  setPicture: (picture?: string) => void;
+  setPictureFile: (pictureFile: File | undefined) => void;
   reset: () => void;
 }
 
-const initialValue: Recipe = {
+const initialValue: UpsertRecipeState = {
   name: "",
   calories: 0,
   cookingTime: 0,
-  picture: "",
   servings: 0,
   mealType: "",
   difficulty: "",
@@ -23,10 +31,14 @@ const initialValue: Recipe = {
   steps: [],
 };
 
+const defaultPicture = "/default-recipe-picture.jpeg";
+
 export const useUpsertRecipeStore = create<State>()(
   devtools((set, get) => {
     return {
-      data: initialValue as Recipe,
+      data: initialValue as Omit<Recipe, "picture">,
+      picture: defaultPicture,
+      pictureFile: undefined,
       updateSteps: (description: string) => {
         const updatedData = get().data;
         updatedData.steps = [{ number: 0, description }];
@@ -53,8 +65,14 @@ export const useUpsertRecipeStore = create<State>()(
         const data = { ...updatedData, [key]: value };
         set({ data });
       },
+      setPicture: (picture = defaultPicture) => set({ picture }),
+      setPictureFile: (pictureFile) => set({ pictureFile }),
       reset: () => {
-        set({ data: initialValue as Recipe });
+        set({
+          data: initialValue as Omit<Recipe, "picture">,
+          picture: defaultPicture,
+          pictureFile: undefined,
+        });
       },
     };
   })
