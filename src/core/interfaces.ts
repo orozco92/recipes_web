@@ -28,11 +28,13 @@ export interface Recipe {
   ingredients: (Ingredient | (Ingredient & WithId))[];
 }
 
+export type UpsertRecipeState = Omit<Recipe, "picture"> & Partial<WithId>;
+
 export interface WithId {
   id: number;
 }
 
-export type RecipePrimitives = keyof Omit<Recipe, "steps" | "ingredients">;
+export type RecipePrimitives = keyof Omit<UpsertRecipeState, "steps" | "ingredients">;
 
 export interface RecipeListDto {
   createdAt: Date;
