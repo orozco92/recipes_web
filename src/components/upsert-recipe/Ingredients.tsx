@@ -13,14 +13,6 @@ import AddIcon from "@mui/icons-material/Add";
 import { useUpsertRecipeStore } from "../../store/recipe";
 import { Ingredient } from "../../core/interfaces";
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-}));
-
 const TextItem = styled(Paper)(({ theme }) => ({
   ...theme.typography.body1,
   backgroundImage: "none",
@@ -62,40 +54,34 @@ export function Ingredients() {
   return (
     <>
       <form onSubmit={handleAddIngredient}>
-        <Stack direction="row" justifyContent="space-between" p={1}>
+        <Stack direction="row" justifyContent="space-between" p={1} pl={0}>
           <Typography variant="h5">Ingredients</Typography>
           <IconButton edge="end" aria-label="add-ingredient" type="submit">
             <AddIcon />
           </IconButton>
         </Stack>
         <Stack direction="row" spacing={2}>
-          <Item style={{ flexGrow: 1 }}>
-            <TextField
-              id="name"
-              name="name"
-              label="Title"
-              variant="outlined"
-              fullWidth={true}
-            />
-          </Item>
-          <Item>
-            <TextField
-              id="amount"
-              name="amount"
-              label="Amount"
-              variant="outlined"
-              fullWidth={true}
-            />
-          </Item>
-          <Item>
-            <TextField
-              id="unit"
-              name="unit"
-              label="Unit"
-              variant="outlined"
-              fullWidth={true}
-            />
-          </Item>
+          <TextField
+            id="name"
+            name="name"
+            label="Title"
+            variant="outlined"
+            fullWidth={true}
+          />
+          <TextField
+            id="amount"
+            name="amount"
+            label="Amount"
+            variant="outlined"
+            fullWidth={true}
+          />
+          <TextField
+            id="unit"
+            name="unit"
+            label="Unit"
+            variant="outlined"
+            fullWidth={true}
+          />
         </Stack>
       </form>
       <List>
