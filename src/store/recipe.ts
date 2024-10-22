@@ -4,8 +4,10 @@ import {
   Recipe,
   RecipePrimitives,
   UpsertRecipeState,
+  WithId,
 } from "../core/interfaces";
 import { devtools } from "zustand/middleware";
+import { defaultRecipePicture } from "../core/constants";
 
 interface State {
   data: UpsertRecipeState;
@@ -17,6 +19,7 @@ interface State {
   updateRecipeData: (data: unknown, key: RecipePrimitives) => void;
   setPicture: (picture?: string) => void;
   setPictureFile: (pictureFile: File | undefined) => void;
+  setRecipe: (recipe: Recipe & WithId) => void;
   reset: () => void;
 }
 
@@ -31,13 +34,11 @@ const initialValue: UpsertRecipeState = {
   steps: [],
 };
 
-const defaultPicture = "/default-recipe-picture.jpeg";
-
 export const useUpsertRecipeStore = create<State>()(
   devtools((set, get) => {
     return {
       data: initialValue as Omit<Recipe, "picture">,
-      picture: defaultPicture,
+      picture: defaultRecipePicture,
       pictureFile: undefined,
       updateSteps: (description: string) => {
         const updatedData = get().data;
@@ -65,12 +66,26 @@ export const useUpsertRecipeStore = create<State>()(
         const data = { ...updatedData, [key]: value };
         set({ data });
       },
-      setPicture: (picture = defaultPicture) => set({ picture }),
+      setPicture: (picture = defaultRecipePicture) => set({ picture }),
       setPictureFile: (pictureFile) => set({ pictureFile }),
+      setRecipe: (recipe) => {
+        const data = {
+          id: recipe.id,
+          name: recipe.name,
+          calories: recipe.calories ?? initialValue.calories,
+          cookingTime: recipe.cookingTime ?? initialValue.cookingTime,
+          servings: recipe.servings ?? initialValue.servings,
+          mealType: recipe.mealType ?? initialValue.mealType,
+          difficulty: recipe.difficulty ?? initialValue.difficulty,
+          ingredients: recipe.ingredients ?? initialValue.ingredients,
+          steps: recipe.steps ?? initialValue.steps,
+        } as UpsertRecipeState;
+        set({ data, picture: recipe.picture ?? defaultRecipePicture });
+      },
       reset: () => {
         set({
           data: initialValue as Omit<Recipe, "picture">,
-          picture: defaultPicture,
+          picture: defaultRecipePicture,
           pictureFile: undefined,
         });
       },

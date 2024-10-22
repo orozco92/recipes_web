@@ -14,14 +14,16 @@ import {
 } from "@mui/material";
 import { MealTypeConst, RecipeDifficultyConst } from "../../core/enums";
 import { Ingredients } from "./Ingredients";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useEffect } from "react";
 import { useUpsertRecipeStore } from "../../store/recipe";
 import { RecipePrimitives } from "../../core/interfaces";
-import { upsertRecipeWithPicture } from "../../services/recipe";
-import { useNavigate } from "react-router-dom";
+import { getRecipeData, upsertRecipeWithPicture } from "../../services/recipe";
+import { useNavigate, useParams } from "react-router-dom";
 import { Steps } from "./Steps";
 import Grid from "@mui/material/Grid2";
 import { UpserRecipePicture } from "./UpsertRecipePicture";
+import { useNotifications } from "@toolpad/core";
+import { useQuery } from "@tanstack/react-query";
 
 export function UpsertRecipe() {
   const navigate = useNavigate();
@@ -30,6 +32,20 @@ export function UpsertRecipe() {
   const updateRecipeData = useUpsertRecipeStore(
     (data) => data.updateRecipeData
   );
+  const setRecipe = useUpsertRecipeStore((data) => data.setRecipe);
+  const notifications = useNotifications();
+
+  const { id } = useParams();
+  const { data: recipeData } = useQuery({
+    queryKey: ["getRecipeData", id],
+    queryFn: () => getRecipeData(id),
+    enabled: !!id,
+  });
+
+  useEffect(() => {
+    if (!recipeData) return;
+    setRecipe(recipeData);
+  }, [recipeData]);
 
   const createRecipePrimitiveChangeFn =
     (key: RecipePrimitives) =>
@@ -48,17 +64,23 @@ export function UpsertRecipe() {
 
   const saveRecipe = () => {
     const dto = { ...recipe };
+
     upsertRecipeWithPicture(dto, pictureFile)
-      .then((data) => {
-        console.log(data);
+      .then(() => {
+        navigate(-1);
       })
-      .catch((error) => console.log(error));
+      .catch(() =>
+        notifications.show(`Error ${id ? "updating" : "creating"} the recipe`, {
+          severity: "error",
+          autoHideDuration: 3000,
+        })
+      );
   };
 
   return (
     <>
       <Card variant="outlined">
-        <CardHeader title="New Recipe" />
+        <CardHeader title={recipeData?.name ? recipeData.name : "New Recipe"} />
         <CardContent>
           <Grid container spacing={2} mb={2}>
             <Grid size={12}>
@@ -90,8 +112,8 @@ export function UpsertRecipe() {
                     <em>None</em>
                   </MenuItem>
                   {Object.entries(MealTypeConst).map((value) => (
-                    <MenuItem key={value[0]} value={value[0]}>
-                      {value[1]}
+                    <MenuItem key={value[1]} value={value[1]}>
+                      {value[0]}
                     </MenuItem>
                   ))}
                 </Select>
@@ -145,8 +167,8 @@ export function UpsertRecipe() {
                     <em>None</em>
                   </MenuItem>
                   {Object.entries(RecipeDifficultyConst).map((value) => (
-                    <MenuItem key={value[0]} value={value[0]}>
-                      {value[1]}
+                    <MenuItem key={value[1]} value={value[1]}>
+                      {value[0]}
                     </MenuItem>
                   ))}
                 </Select>
