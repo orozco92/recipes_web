@@ -1,25 +1,9 @@
-import {
-  IconButton,
-  List,
-  Paper,
-  Stack,
-  styled,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { IconButton, List, Stack, TextField, Typography } from "@mui/material";
 import { FormEvent } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { useUpsertRecipeStore } from "../../store/recipe";
 import { Ingredient } from "../../core/interfaces";
-
-const TextItem = styled(Paper)(({ theme }) => ({
-  ...theme.typography.body1,
-  backgroundImage: "none",
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-}));
 
 export function Ingredients() {
   const ingredients =
@@ -88,15 +72,15 @@ export function Ingredients() {
         {ingredients.map((item, index) => (
           <Stack
             direction="row"
-            justifyContent="space-between"
             spacing={2}
+            sx={{ justifyContent: "space-between", paddingLeft: 1 }}
             key={item.name}
           >
             <Stack direction="row" spacing={2}>
-              <TextItem>{item.name}</TextItem>
-              <TextItem>
-                {item.amount} ({item.unit})
-              </TextItem>
+              <Typography component={"span"}>{item.name}</Typography>
+              <Typography component={"span"}>
+                {item.amount} {item.unit ?? ""}
+              </Typography>
             </Stack>
             <IconButton
               edge="end"
