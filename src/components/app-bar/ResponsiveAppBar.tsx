@@ -10,6 +10,7 @@ import {
   MenuItem,
   Button,
   Divider,
+  useColorScheme,
 } from "@mui/material";
 import AdbIcon from "@mui/icons-material/DiningSharp";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -18,6 +19,8 @@ import { Link, NavLink, useLocation, useParams } from "react-router-dom";
 import { AppBarProfile } from "./AppBarProfile";
 import { useAuthStore } from "../../store/auth";
 import { Roles } from "../../core/enums";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 
 const pages = ["Breakfast", "Lunch", "Dinner", "Deserts"];
 
@@ -27,6 +30,7 @@ function ResponsiveAppBar() {
   const { type: mealTypeParam } = useParams();
   const { pathname } = useLocation();
   const user = useAuthStore((s) => s.user);
+  const { mode, setMode } = useColorScheme();
 
   const canCreateRecipe =
     user && [Roles.Admin, Roles.Colaborator].includes(user.role);
@@ -39,6 +43,8 @@ function ResponsiveAppBar() {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
+
+  const handleChangeTheme = () => setMode(mode === "dark" ? "light" : "dark");
 
   return (
     <AppBar position="static">
@@ -190,6 +196,11 @@ function ResponsiveAppBar() {
           </Box>
           <Box>
             <AppBarSearch />
+          </Box>
+          <Box>
+            <IconButton onClick={handleChangeTheme} color="inherit">
+              {mode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
+            </IconButton>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <AppBarProfile />
