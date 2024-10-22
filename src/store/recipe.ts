@@ -1,21 +1,32 @@
 import { create } from "zustand";
-import { Ingredient, Recipe, RecipePrimitives } from "../core/interfaces";
+import {
+  Ingredient,
+  Recipe,
+  RecipePrimitives,
+  UpsertRecipeState,
+  WithId,
+} from "../core/interfaces";
 import { devtools } from "zustand/middleware";
+import { defaultRecipePicture } from "../core/constants";
 
 interface State {
-  data: Recipe;
+  data: UpsertRecipeState;
+  picture: string;
+  pictureFile: File | undefined;
   updateSteps: (description: string) => void;
   updateIngredients: (ingredient: Ingredient) => void;
   removeIngredient: (index: number) => void;
   updateRecipeData: (data: unknown, key: RecipePrimitives) => void;
+  setPicture: (picture?: string) => void;
+  setPictureFile: (pictureFile: File | undefined) => void;
+  setRecipe: (recipe: Recipe & WithId) => void;
   reset: () => void;
 }
 
-const initialValue: Recipe = {
+const initialValue: UpsertRecipeState = {
   name: "",
   calories: 0,
   cookingTime: 0,
-  picture: "",
   servings: 0,
   mealType: "",
   difficulty: "",
@@ -26,7 +37,9 @@ const initialValue: Recipe = {
 export const useUpsertRecipeStore = create<State>()(
   devtools((set, get) => {
     return {
-      data: initialValue as Recipe,
+      data: initialValue as Omit<Recipe, "picture">,
+      picture: defaultRecipePicture,
+      pictureFile: undefined,
       updateSteps: (description: string) => {
         const updatedData = get().data;
         updatedData.steps = [{ number: 0, description }];
@@ -53,8 +66,28 @@ export const useUpsertRecipeStore = create<State>()(
         const data = { ...updatedData, [key]: value };
         set({ data });
       },
+      setPicture: (picture = defaultRecipePicture) => set({ picture }),
+      setPictureFile: (pictureFile) => set({ pictureFile }),
+      setRecipe: (recipe) => {
+        const data = {
+          id: recipe.id,
+          name: recipe.name,
+          calories: recipe.calories ?? initialValue.calories,
+          cookingTime: recipe.cookingTime ?? initialValue.cookingTime,
+          servings: recipe.servings ?? initialValue.servings,
+          mealType: recipe.mealType ?? initialValue.mealType,
+          difficulty: recipe.difficulty ?? initialValue.difficulty,
+          ingredients: recipe.ingredients ?? initialValue.ingredients,
+          steps: recipe.steps ?? initialValue.steps,
+        } as UpsertRecipeState;
+        set({ data, picture: recipe.picture ?? defaultRecipePicture });
+      },
       reset: () => {
-        set({ data: initialValue as Recipe });
+        set({
+          data: initialValue as Omit<Recipe, "picture">,
+          picture: defaultRecipePicture,
+          pictureFile: undefined,
+        });
       },
     };
   })

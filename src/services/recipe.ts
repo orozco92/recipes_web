@@ -1,19 +1,9 @@
 import axios from "axios";
-import { Recipe } from "../core/interfaces";
 import { RecipeListRequest } from "../core/interfaces/api";
+import { UpsertRecipeDto } from "../core/interfaces/recipe";
+import { Recipe, WithId } from "../core/interfaces";
 
 const apiURL = import.meta.env.VITE_API_URL;
-
-export async function upsertRecipe(recipe: Recipe) {
-  const response = await fetch(`${apiURL}/recipes`, {
-    method: "POST",
-    headers: [["Content-Type", "application/json"]],
-    body: JSON.stringify(recipe),
-  });
-
-  const data = response.json();
-  return data;
-}
 
 export async function listRecipes(request: RecipeListRequest) {
   const query = buildRecipesListQuery(request);
@@ -57,4 +47,46 @@ export async function getRecipeData(recipeId?: string) {
   const response = await fetch(`http://localhost:3000/recipes/${recipeId}`);
   const json = response.json();
   return json;
+}
+
+export async function upsertRecipeWithPicture(
+  upsertRecipeDto: UpsertRecipeDto,
+  picture?: File
+) {
+  const recipe = await upsertRecipe(upsertRecipeDto);
+  if (!picture) return recipe;
+  try {
+    const withImage = await updateRecipePicture(recipe.id, picture);
+    return withImage;
+  } catch (error) {
+    await removeRecipe(recipe.id);
+    throw error;
+  }
+}
+
+export async function upsertRecipe(
+  upsertRecipeDto: UpsertRecipeDto
+): Promise<Recipe & WithId> {
+  const response = !upsertRecipeDto.id
+    ? await axios.post(`${apiURL}/recipes`, upsertRecipeDto)
+    : await axios.patch(
+        `${apiURL}/recipes/${upsertRecipeDto.id}`,
+        upsertRecipeDto
+      );
+  return response.data;
+}
+
+export async function updateRecipePicture(
+  id: number,
+  picture: File
+): Promise<Recipe & WithId> {
+  const body = new FormData();
+  body.append("file", picture);
+  const response = await axios.patch(`${apiURL}/recipes/${id}/picture`, body);
+  return response.data;
+}
+
+export async function removeRecipe(id: number): Promise<Recipe & WithId> {
+  const response = await axios.delete(`${apiURL}/recipes/${id}`);
+  return response.data;
 }

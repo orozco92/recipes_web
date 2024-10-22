@@ -64,7 +64,6 @@ export function ChangeProfilePicture({ profilePicture }: Props) {
         <VisuallyHiddenInput
           type="file"
           onChange={handleImageChange}
-          multiple
         />
       </Button>
     </Stack>

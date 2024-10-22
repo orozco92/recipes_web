@@ -16,10 +16,13 @@ import RestaurantIcon from "@mui/icons-material/Restaurant";
 import AddToFavoriteIcon from "@mui/icons-material/FavoriteBorder";
 import RemoveFromFavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
+import EditIcon from "@mui/icons-material/Edit";
 import { useFavoritesStore } from "../../store/favorites";
 import { useAuthStore } from "../../store/auth";
 import { addToFavorites, removeFromFavorites } from "../../services/profile";
 import { useNotifications } from "@toolpad/core/useNotifications";
+import { useDialogs } from "@toolpad/core";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   id: number;
@@ -53,13 +56,14 @@ function RecipeListItem({
   onClick,
 }: Props) {
   const notifications = useNotifications();
+  const dialogs = useDialogs();
   const user = useAuthStore((s) => s.user);
   const favorites = useFavoritesStore((s) => s.favorites);
   const addToFavoritesStore = useFavoritesStore((s) => s.addToFavorites);
   const removeFromFavoritesStore = useFavoritesStore(
     (s) => s.removeFromFavorites
   );
-
+  const navigate = useNavigate();
   const isFavorite = favorites.includes(id);
 
   const handleFavoriteButtonClick = () => {
@@ -84,6 +88,12 @@ function RecipeListItem({
     }
   };
 
+  const handleShareButtonClick = () => {
+    import("../utils/SocialShareDialog").then(({ SocialShareDialog }) =>
+      dialogs.open(SocialShareDialog, id)
+    );
+  };
+  const handleEditClick = () => navigate(`/recipes/${id}/edit`);
   return (
     <Card sx={{ maxWidth: 345 }}>
       {/* <CardHeader
@@ -156,9 +166,16 @@ function RecipeListItem({
             </IconButton>
           </Tooltip>
         )}
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
+        <Tooltip title={"Share"} placement="top">
+          <IconButton aria-label="share" onClick={handleShareButtonClick}>
+            <ShareIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={"Edit recipe"} placement="top">
+          <IconButton aria-label="edit" onClick={handleEditClick}>
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
       </CardActions>
     </Card>
   );

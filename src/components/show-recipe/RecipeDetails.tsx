@@ -3,6 +3,7 @@ import { Recipe } from "../../core/interfaces";
 import { IngredientsDetail } from "./IngredientsDetail";
 import { StepsDetail } from "./StepsDetail";
 import { RecipeInfo } from "./RecipeInfo";
+import { defaultRecipePicture } from "../../core/constants";
 
 type Props = Recipe;
 
@@ -21,7 +22,7 @@ export function RecipeDetails({
     <>
       <Stack>
         <img
-          src={picture}
+          src={picture ?? defaultRecipePicture}
           alt={`picture of ${name}`}
           loading="lazy"
           style={{

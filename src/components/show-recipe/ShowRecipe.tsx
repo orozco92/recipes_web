@@ -24,7 +24,7 @@ export function ShowRecipe() {
     calories,
     steps,
     ingredients,
-  } = data ?? {};
+  } = data ?? { ingredients: [], steps: [] };
 
   return (
     <>
