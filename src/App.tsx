@@ -49,11 +49,11 @@ function App() {
         component={"main"}
         sx={{
           overflowY: "auto",
-          paddingTop: "20px",
-          // paddingBottom: "20px",
+          paddingTop: "1rem",
+          paddingBottom: "1rem",
         }}
       >
-        <Container>
+        <Container sx={{ height: "100%" }}>
           <QueryClientProvider client={queryClient}>
             <DialogsProvider>
               <Outlet />

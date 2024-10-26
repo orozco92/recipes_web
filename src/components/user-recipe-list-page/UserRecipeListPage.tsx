@@ -150,10 +150,10 @@ export function UserRecipeListPage() {
         loading={isLoading}
         sx={{
           border: 0,
+          flexGrow: 1,
           [`& .${gridClasses.cell}`]: {
             py: 1,
           },
-          flexGrow: 1,
         }}
         paginationMode="server"
         onPaginationModelChange={handlePaginationChange}

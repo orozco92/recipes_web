@@ -9,10 +9,11 @@ import { useUserListStore } from "../../store/user-list";
 import {
   DataGrid,
   GridActionsCellItem,
+  gridClasses,
   GridColDef,
   GridRenderCellParams,
 } from "@mui/x-data-grid";
-import { Chip, Stack, Tooltip } from "@mui/material";
+import { Chip, Stack, Tooltip, Typography } from "@mui/material";
 import { Colors, User } from "../../core/interfaces";
 import { Roles } from "../../core/enums";
 import PersonOffIcon from "@mui/icons-material/PersonOff";
@@ -20,10 +21,11 @@ import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 // import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import PersonIcon from "@mui/icons-material/Person";
 import { useDialogs, useNotifications } from "@toolpad/core";
+import { defaultPageSizes } from "../../core/constants";
+import { useBasicTableActions } from "../../hooks/useBasicTableActions";
 
 export function UserListPage() {
-  const page = useUserListStore((s) => s.page);
-  const pageSize = useUserListStore((s) => s.pageSize);
+  const { page, pageSize, handlePaginationChange } = useBasicTableActions();
   const roles = useUserListStore((s) => s.roles);
   const notifications = useNotifications();
   const dialogs = useDialogs();
@@ -109,8 +111,6 @@ export function UserListPage() {
       });
   };
 
-  const pageSizes = [10, 25, 50, 100];
-
   const columns: GridColDef[] = [
     { field: "email", headerName: "Email", flex: 1 },
     { field: "username", headerName: "Username", flex: 1 },
@@ -120,7 +120,7 @@ export function UserListPage() {
       description: "This column has a value getter and is not sortable.",
       sortable: false,
       flex: 1,
-      valueGetter: (value, row) =>
+      valueGetter: (_value, row) =>
         `${row.firstName || ""} ${row.lastName || ""}`,
     },
     {
@@ -173,19 +173,30 @@ export function UserListPage() {
   ];
 
   return (
-    <Stack>
-      <h1>User List</h1>
+    <Stack sx={{ height: "100%" }}>
+      <Typography component={"h1"} variant="h4">
+        User List
+      </Typography>
       <DataGrid
         rows={data?.data ?? []}
         columns={columns}
         initialState={{ pagination: { paginationModel: { page, pageSize } } }}
-        pageSizeOptions={pageSizes}
+        pageSizeOptions={defaultPageSizes}
         disableRowSelectionOnClick
-        sx={{ border: 0 }}
+        sx={{
+          border: 0,
+          flexGrow: 1,
+          [`& .${gridClasses.cell}`]: {
+            py: 1,
+          },
+        }}
         loading={isLoading}
         paginationMode="server"
+        onPaginationModelChange={handlePaginationChange}
+        sortingMode="server"
+        filterMode="server"
+        getRowHeight={() => "auto"}
         rowCount={data?.total ?? 0}
-        onPaginationModelChange={() => {}}
       />
     </Stack>
   );
