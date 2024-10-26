@@ -1,5 +1,8 @@
 import axios from "axios";
-import { RecipeListRequest } from "../core/interfaces/api";
+import {
+  RecipeListRequest,
+  SearcheablePagedAndSortedRequest,
+} from "../core/interfaces/api";
 import { UpsertRecipeDto } from "../core/interfaces/recipe";
 import { Recipe, WithId } from "../core/interfaces";
 
@@ -19,6 +22,18 @@ export async function favoriteRecipes(request: RecipeListRequest) {
   const response = await axios.get(
     `${apiURL}/recipes/favorites?${query.toString()}`
   );
+
+  return response.data;
+}
+
+export async function myRecipes(request: SearcheablePagedAndSortedRequest) {
+  const query = new URLSearchParams({
+    page: request.page.toString(),
+    pageSize: request.pageSize.toString(),
+  });
+  if (request.search) query.set("search", request.search);
+
+  const response = await axios.get(`${apiURL}/recipes/me?${query.toString()}`);
 
   return response.data;
 }
@@ -44,9 +59,8 @@ export function buildRecipesListQuery(
 
 export async function getRecipeData(recipeId?: string) {
   if (!recipeId) return;
-  const response = await fetch(`http://localhost:3000/recipes/${recipeId}`);
-  const json = response.json();
-  return json;
+  const response = await axios.get(`${apiURL}/recipes/${recipeId}`);
+  return response.data;
 }
 
 export async function upsertRecipeWithPicture(

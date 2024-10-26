@@ -12,7 +12,7 @@ import {
   GridColDef,
   GridRenderCellParams,
 } from "@mui/x-data-grid";
-import { Chip, Tooltip } from "@mui/material";
+import { Chip, Stack, Tooltip } from "@mui/material";
 import { Colors, User } from "../../core/interfaces";
 import { Roles } from "../../core/enums";
 import PersonOffIcon from "@mui/icons-material/PersonOff";
@@ -173,7 +173,7 @@ export function UserListPage() {
   ];
 
   return (
-    <>
+    <Stack>
       <h1>User List</h1>
       <DataGrid
         rows={data?.data ?? []}
@@ -187,7 +187,7 @@ export function UserListPage() {
         rowCount={data?.total ?? 0}
         onPaginationModelChange={() => {}}
       />
-    </>
+    </Stack>
   );
 }
 

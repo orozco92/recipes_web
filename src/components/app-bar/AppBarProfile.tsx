@@ -14,7 +14,7 @@ import { useAuthStore } from "../../store/auth";
 import { updateAccessToken } from "../../services/auth";
 
 export function AppBarProfile() {
-  const settings = ["Favorites", "Profile", "Logout"] as const;
+  const settings = ["My Recipes", "Favorites", "Profile", "Logout"] as const;
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const user = useAuthStore((s) => s.user);
   const setToken = useAuthStore((s) => s.setToken);
@@ -30,6 +30,9 @@ export function AppBarProfile() {
     switch (value) {
       case "Favorites":
         navigate("/me/favorites");
+        break;
+      case "My Recipes":
+        navigate("/me/recipes");
         break;
       case "Profile":
         navigate("/me");
