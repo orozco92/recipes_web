@@ -8,7 +8,7 @@ import { useTheme } from "@mui/material/styles";
 import { useAuthStore } from "../../store/auth";
 import { login } from "../../services/auth";
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Button, createTheme } from "@mui/material";
 
 const providers: AuthProvider[] = [
   { id: "credentials", name: "Email and Password" },
@@ -18,6 +18,10 @@ const providers: AuthProvider[] = [
 
 export default function SignIn() {
   const theme = useTheme();
+  const newTheme = createTheme({
+    colorSchemes: { [theme.palette.mode]: true },
+  });
+
   const notifications = useNotifications();
 
   const setToken = useAuthStore((s) => s.setToken);
@@ -46,7 +50,7 @@ export default function SignIn() {
   };
 
   return (
-    <AppProvider theme={theme}>
+    <AppProvider theme={newTheme}>
       <SignInPage
         signIn={signIn}
         providers={providers}

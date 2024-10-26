@@ -70,6 +70,15 @@ const router = createBrowserRouter([
         },
       },
       {
+        path: "/me/recipes",
+        async lazy() {
+          const { UserRecipeListPage } = await import(
+            "../components/user-recipe-list-page/UserRecipeListPage.tsx"
+          );
+          return { Component: UserRecipeListPage };
+        },
+      },
+      {
         path: "/me",
         async lazy() {
           const { Profile } = await import("../components/profile/Profile.tsx");

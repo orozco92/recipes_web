@@ -16,13 +16,11 @@ import RestaurantIcon from "@mui/icons-material/Restaurant";
 import AddToFavoriteIcon from "@mui/icons-material/FavoriteBorder";
 import RemoveFromFavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
-import EditIcon from "@mui/icons-material/Edit";
 import { useFavoritesStore } from "../../store/favorites";
 import { useAuthStore } from "../../store/auth";
 import { addToFavorites, removeFromFavorites } from "../../services/profile";
 import { useNotifications } from "@toolpad/core/useNotifications";
 import { useDialogs } from "@toolpad/core";
-import { useNavigate } from "react-router-dom";
 
 interface Props {
   id: number;
@@ -63,7 +61,6 @@ function RecipeListItem({
   const removeFromFavoritesStore = useFavoritesStore(
     (s) => s.removeFromFavorites
   );
-  const navigate = useNavigate();
   const isFavorite = favorites.includes(id);
 
   const handleFavoriteButtonClick = () => {
@@ -93,7 +90,6 @@ function RecipeListItem({
       dialogs.open(SocialShareDialog, id)
     );
   };
-  const handleEditClick = () => navigate(`/recipes/${id}/edit`);
   return (
     <Card sx={{ maxWidth: 345 }}>
       {/* <CardHeader
@@ -169,11 +165,6 @@ function RecipeListItem({
         <Tooltip title={"Share"} placement="top">
           <IconButton aria-label="share" onClick={handleShareButtonClick}>
             <ShareIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title={"Edit recipe"} placement="top">
-          <IconButton aria-label="edit" onClick={handleEditClick}>
-            <EditIcon />
           </IconButton>
         </Tooltip>
       </CardActions>
