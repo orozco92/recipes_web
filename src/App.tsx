@@ -1,5 +1,5 @@
 import "./App.css";
-import { Container, Stack } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import ResponsiveAppBar from "./components/app-bar/ResponsiveAppBar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Outlet } from "react-router-dom";
@@ -37,23 +37,31 @@ function App() {
   }, [token]);
 
   return (
-    <Stack sx={{ height: "100vh" }}>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateRows: "auto 1fr auto",
+        height: "100vh",
+      }}
+    >
       <ResponsiveAppBar />
-      <Container
+      <Box
+        component={"main"}
         sx={{
-          maxHeight: "100%",
           overflowY: "auto",
           paddingTop: "20px",
-          paddingBottom: "20px",
+          // paddingBottom: "20px",
         }}
       >
-        <QueryClientProvider client={queryClient}>
-          <DialogsProvider>
-            <Outlet />
-          </DialogsProvider>
-        </QueryClientProvider>
-      </Container>
-    </Stack>
+        <Container>
+          <QueryClientProvider client={queryClient}>
+            <DialogsProvider>
+              <Outlet />
+            </DialogsProvider>
+          </QueryClientProvider>
+        </Container>
+      </Box>
+    </div>
   );
 }
 

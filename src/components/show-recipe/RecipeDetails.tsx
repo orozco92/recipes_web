@@ -22,7 +22,7 @@ export function RecipeDetails({
     <>
       <Stack>
         <img
-          src={picture ?? defaultRecipePicture}
+          src={picture || defaultRecipePicture}
           alt={`picture of ${name}`}
           loading="lazy"
           style={{
